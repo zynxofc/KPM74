@@ -167,3 +167,24 @@
 
 - Jika `NEXT_PUBLIC_BASE_URL` tidak di-set di `.env.local`, sitemap dan OG menggunakan URL Vercel.
 - Wajib di-set saat deploy ke domain custom.
+
+---
+
+## DEC-09 — Penanganan Try-Catch pada Query Sitemap
+
+**Tanggal:** 2026-07-02
+
+**Konteks:** Next.js melakukan render sitemap (`/sitemap.xml`) pada saat build time. Pada environment bersih seperti Vercel, database SQLite belum dimigrasikan sehingga memicu `SqliteError: no such table: posts` yang membatalkan build.
+
+**Keputusan:** Membungkus pemanggilan query database di sitemap dengan blok `try...catch` dan mengembalikan data sitemap statis jika query gagal.
+
+**Alasan:**
+
+- Mencegah proses build Next.js gagal pada deployment platform yang bersih.
+- Mempertahankan kegunaan sitemap statis demi kualitas SEO dasar walaupun database belum terhubung.
+- Menjaga fungsionalitas dinamis sitemap di environment di mana database sudah terinisialisasi.
+
+**Konsekuensi:**
+
+- Jika query database gagal, error akan ditulis sebagai warning di console build dan sitemap hanya memuat URL statis utama.
+

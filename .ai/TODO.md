@@ -1,8 +1,8 @@
 # TODO
 
-## Status: Release Preparation Sprint Selesai
+## Status: Sitemap Build Fix Sprint Selesai
 
-Project dalam status READY FOR RELEASE v1.0 & DEPLOYMENT.
+Project dalam status READY FOR RELEASE v1.0 & DEPLOYMENT (Vercel Build fix terverifikasi).
 
 ## Task Aktif
 
@@ -25,3 +25,4 @@ Tidak ada task aktif.
 - [x] Documentation Driven Development migration
 - [x] Deployment preparation & documentation (`docs/DEPLOYMENT.md`)
 - [x] Release notes v1.0 & professional README.md
+- [x] Fix Vercel build error on sitemap page compilation

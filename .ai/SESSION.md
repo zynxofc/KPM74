@@ -2,25 +2,26 @@
 
 ## Last Update
 
-2026-07-02 — Release Preparation Sprint
+2026-07-02 — Sitemap Build Fix Sprint
 
 ## Status
 
-PROJECT READY FOR RELEASE v1.0.
+PROJECT READY FOR RELEASE v1.0 & DEPLOYMENT.
 
 ## Pekerjaan Sesi Ini
 
-Release Preparation Sprint:
+Sitemap Build Fix Sprint:
 
-1. Dibuat berkas `release_notes_v1_0.md` di artifacts directory — Ringkasan project, fitur utama, teknologi, struktur project, cara menjalankan, env variables, cara deploy, dan known limitations.
-2. Diperbarui berkas root `README.md` menjadi highly professional dengan tambahan badge build/strict ts, screenshot placeholder, detail deskripsi, installation, development, build, deployment, environment, dan license sections.
+1. Modifikasi `src/app/sitemap.ts` untuk membungkus pemanggilan database query berita (`posts`) dalam blok `try...catch` demi mencegah kegagalan build (`SqliteError: no such table: posts`) ketika database belum termigrasi (seperti di Vercel build time).
+2. Verifikasi lokal `npm run build` sukses 100%.
+3. Diperbarui dokumen keputusan teknis (`docs/08_DECISIONS.md` dan `.ai/DECISIONS.md`) dengan menambahkan entri `DEC-09`.
+4. Diperbarui berkas log perubahan (`docs/07_CHANGELOG.md` dan `CHANGELOG.md`).
 
 ## Catatan Penting
 
-- Project telah terverifikasi sukses build dan linter tanpa error.
-- `.env.local` di-exclude dengan benar dari pelacakan git via `.gitignore` menggunakan pola `.env*`.
-- Pengecualian `!.env.example` disarankan untuk ditambahkan ke `.gitignore` agar file blueprint environment tersebut dapat di-track dan ter-push ke repositori GitHub.
+- Saat Next.js di-deploy ke Vercel, database SQLite (`dev.db`) biasanya kosong atau belum bermigrasi. Membungkus query sitemap dengan penanganan error memastikan build pipeline Vercel tidak terhenti, dan sitemap akan mengembalikan URL statis utama sebagai fallback dasar.
+- Setelah proses deploy selesai dan database termigrasi secara dinamis, sitemap akan otomatis menyertakan link berita begitu database terisi data tanpa perlu merubah kode kembali.
 
 ## Next Step
 
-Aplikasi siap untuk dipublish di repositori GitHub sebagai Release v1.0.
+Push repositori ke GitHub dan deploy ke Vercel/Railway.

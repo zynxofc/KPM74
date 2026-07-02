@@ -53,18 +53,27 @@ const staticRoutes: MetadataRoute.Sitemap = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Dynamic news routes from database
-  const allPosts = await db
-    .select({ slug: posts.slug, publishedAt: posts.publishedAt })
-    .from(posts)
-    .orderBy(desc(posts.publishedAt));
+  try {
+    // Dynamic news routes from database
+    const allPosts = await db
+      .select({ slug: posts.slug, publishedAt: posts.publishedAt })
+      .from(posts)
+      .orderBy(desc(posts.publishedAt));
 
-  const newsRoutes: MetadataRoute.Sitemap = allPosts.map((post) => ({
-    url: `${BASE_URL}/berita/${post.slug}`,
-    lastModified: post.publishedAt ? new Date(post.publishedAt) : new Date(),
-    changeFrequency: "weekly" as const,
-    priority: 0.7,
-  }));
+    const newsRoutes: MetadataRoute.Sitemap = allPosts.map((post) => ({
+      url: `${BASE_URL}/berita/${post.slug}`,
+      lastModified: post.publishedAt ? new Date(post.publishedAt) : new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    }));
 
-  return [...staticRoutes, ...newsRoutes];
+    return [...staticRoutes, ...newsRoutes];
+  } catch (error) {
+    console.warn(
+      "Sitemap: Gagal memuat data dari database saat build (tabel belum terbentuk). Mengembalikan static routes saja.",
+      error
+    );
+    return staticRoutes;
+  }
 }
+

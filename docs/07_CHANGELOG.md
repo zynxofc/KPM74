@@ -6,6 +6,13 @@
 
 ---
 
+## 2026-07-02 — Sitemap Build Fix Sprint
+
+**Perubahan:**
+
+- Membungkus pemanggilan query database berita (`posts`) pada `src/app/sitemap.ts` dalam blok `try...catch` untuk mengembalikan static routes jika terjadi kegagalan (misalnya database belum terbentuk pada lingkungan bersih Vercel).
+- Verifikasi hasil `npm run build` berhasil 100%.
+
 ## 2026-07-02 — Release Preparation Sprint
 
 **Perubahan:**

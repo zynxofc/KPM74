@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-07-02 (Sitemap Build Fix Sprint)
+
+- Wrapped sitemap database query (`posts`) in `src/app/sitemap.ts` in `try...catch` block to fallback to static routes when tables are not yet generated.
+- Verified build and TypeScript strict check pass.
+
 ## 2026-07-02 (Release Preparation Sprint)
 
 - Created `release_notes_v1_0.md` in artifacts directory — Release summaries, feature lists, running instructions, and known limitations.
