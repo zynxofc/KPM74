@@ -75,6 +75,7 @@ Frontend berinteraksi dengan Laravel API melalui server actions di `src/lib/admi
 
 - **BUG‑01**: FAQ module belum lengkap → ditambahkan tabel, migrasi, CRUD, halaman admin & publik.
 - **BUG‑02**: Duplikasi pagination pada DataTable → digantikan dengan reusable hook.
+- **BUG-05**: Error build Vercel akibat SQLite dependency di `sitemap.ts` & thread worker crash (heap corruption) → dihapus total dari sitemap dan ditambahkan pre-build database file creation.
 - Semua unit test lint & type‑check lolos setelah perbaikan.
 
 ## Keputusan Teknis
@@ -95,12 +96,12 @@ Frontend berinteraksi dengan Laravel API melalui server actions di `src/lib/admi
 
 ## File Terakhir Diubah
 
-- `src/components/admin/FaqsManager.tsx`
-- `src/app/(admin)/admin/faq/page.tsx`
-- `src/hooks/useClientPagination.ts`
-- `src/lib/validations.ts`
-- `src/db/schema.ts`
-- `src/lib/admin/actions.ts`
+- `src/app/sitemap.ts`
+- `package.json`
+- `docs/05_PROJECT_STATUS.md`
+- `docs/07_CHANGELOG.md`
+- `docs/08_DECISIONS.md`
+- `docs/09_BUGS.md`
 
 ## File Kemungkinan Selanjutnya Diubah
 

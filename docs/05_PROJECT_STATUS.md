@@ -94,3 +94,4 @@ Semua fitur utama selesai, build dan lint bersih, halaman publik dan admin lengk
 | Public Website Sprint | 2026-07-02 | 5 halaman publik baru |
 | Production Readiness Sprint | 2026-07-02 | manifest, robots, sitemap, OG, error pages |
 | Documentation Sprint | 2026-07-02 | Migrasi ke Documentation Driven Development |
+| Sitemap Build Fix Sprint | 2026-07-03 | Menghapus dependensi SQLite dari sitemap dan mempre-kreasi dev.db saat build demi perbaikan deployment Vercel |

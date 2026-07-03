@@ -1,7 +1,4 @@
 import type { MetadataRoute } from "next";
-import { db } from "@/db";
-import { posts } from "@/db/schema";
-import { desc } from "drizzle-orm";
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_BASE_URL || "https://lintreekpm.vercel.app";
@@ -53,27 +50,11 @@ const staticRoutes: MetadataRoute.Sitemap = [
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  try {
-    // Dynamic news routes from database
-    const allPosts = await db
-      .select({ slug: posts.slug, publishedAt: posts.publishedAt })
-      .from(posts)
-      .orderBy(desc(posts.publishedAt));
-
-    const newsRoutes: MetadataRoute.Sitemap = allPosts.map((post) => ({
-      url: `${BASE_URL}/berita/${post.slug}`,
-      lastModified: post.publishedAt ? new Date(post.publishedAt) : new Date(),
-      changeFrequency: "weekly" as const,
-      priority: 0.7,
-    }));
-
-    return [...staticRoutes, ...newsRoutes];
-  } catch (error) {
-    console.warn(
-      "Sitemap: Gagal memuat data dari database saat build (tabel belum terbentuk). Mengembalikan static routes saja.",
-      error
-    );
-    return staticRoutes;
-  }
+  // NOTE: Dynamic news sitemap generation from SQLite database has been temporarily disabled
+  // to avoid build failures (SqliteError: no such table: posts) in environments like Vercel
+  // where the local database is not migrated/seeded during compile-time prerendering.
+  //
+  // TODO: Reactivate dynamic news sitemap after migration to a production database (PostgreSQL)
+  // or a serverless database that supports runtime schema checking without build-time file locks.
+  return staticRoutes;
 }
-

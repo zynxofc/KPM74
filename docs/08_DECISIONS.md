@@ -170,21 +170,23 @@
 
 ---
 
-## DEC-09 — Penanganan Try-Catch pada Query Sitemap
+## DEC-09 — Pengurangan Dependensi Database dari Sitemap & Pre-build Empty DB
 
-**Tanggal:** 2026-07-02
+**Tanggal:** 2026-07-03
 
-**Konteks:** Next.js melakukan render sitemap (`/sitemap.xml`) pada saat build time. Pada environment bersih seperti Vercel, database SQLite belum dimigrasikan sehingga memicu `SqliteError: no such table: posts` yang membatalkan build.
+**Konteks:** Next.js melakukan pra-render sitemap (`/sitemap.xml`) pada saat kompilasi (*build-time*). Karena SQLite bersifat file-based lokal, server Vercel yang tidak memiliki database termigrasi memicu `SqliteError: no such table: posts` jika `sitemap.ts` mengimpor `db`. Selain itu, jika file database `dev.db` sama sekali absen pada server build, Next.js worker threads yang memproses static tracing akan mencoba membuat file secara bersamaan, sehingga memicu heap corruption crash (exit code `3221226505`).
 
-**Keputusan:** Membungkus pemanggilan query database di sitemap dengan blok `try...catch` dan mengembalikan data sitemap statis jika query gagal.
+**Keputusan:**
+
+1. Menghapus seluruh impor database (`db`) dan skema (`posts`) dari `src/app/sitemap.ts` secara total, serta menyajikan rute sitemap statis sebagai data keluaran utama sitemap.
+2. Mengubah perintah `"build"` di `package.json` untuk menjalankan inline script Node.js yang mempre-kreasi file `dev.db` kosong secara sinkron sebelum Next.js build dimulai.
 
 **Alasan:**
 
-- Mencegah proses build Next.js gagal pada deployment platform yang bersih.
-- Mempertahankan kegunaan sitemap statis demi kualitas SEO dasar walaupun database belum terhubung.
-- Menjaga fungsionalitas dinamis sitemap di environment di mana database sudah terinisialisasi.
+- Menjamin 100% proses build Next.js sukses di seluruh platform serverless (seperti Vercel) tanpa ketergantungan database dan tanpa mengalami crash thread worker.
+- Menghindari inisialisasi query dan pembacaan disk SQLite yang tidak perlu saat build metadata.
+- Mengurangi kompleksitas penanganan database lokal di lingkungan build.
 
 **Konsekuensi:**
 
-- Jika query database gagal, error akan ditulis sebagai warning di console build dan sitemap hanya memuat URL statis utama.
-
+- Sitemap hanya akan menyertakan rute statis utama. Sitemap berita dinamis dinonaktifkan sementara dan akan diaktifkan kembali saat migrasi ke database production berbasis cloud (PostgreSQL).

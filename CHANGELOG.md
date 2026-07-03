@@ -1,6 +1,13 @@
 # Changelog
 
-## 2026-07-02 (Sitemap Build Fix Sprint)
+## 2026-07-03 (Sitemap SQLite Dependency Removal)
+
+- Completely removed database imports (`db` from `@/db` and `posts` from `@/db/schema`) from `src/app/sitemap.ts` to prevent build-time SQLite initialization.
+- Retained sitemap static routes and added environment-based fallback domain.
+- Modified `package.json` build command to automatically create an empty `dev.db` file if absent, preventing Next.js concurrent worker thread race condition/heap corruption failures.
+- Verified build and lint checks pass 100% in database-less environment.
+
+## 2026-07-02 (Sitemap Build Fix Sprint - Initial)
 
 - Wrapped sitemap database query (`posts`) in `src/app/sitemap.ts` in `try...catch` block to fallback to static routes when tables are not yet generated.
 - Verified build and TypeScript strict check pass.

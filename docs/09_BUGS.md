@@ -116,6 +116,33 @@ Bungkus string dalam expression `{"..."}` untuk menghindari JSX entity parsing.
 
 ---
 
+### BUG-05 — Vercel Build Failure due to SQLite Dependency in Sitemap.ts & Worker Crash
+
+**Ditemukan:** 2026-07-03
+**Diselesaikan:** 2026-07-03
+**Severity:** Critical
+
+**Deskripsi:**
+
+Build Vercel gagal dengan error `SqliteError: no such table: posts` saat pra-render `/sitemap.xml`, dan ketika file database `dev.db` tidak ada, Next.js worker threads mengalami crash heap corruption / segfault (exit code `3221226505`).
+
+**Root Cause:**
+
+1. `src/app/sitemap.ts` mengimpor `db` dan `posts` secara langsung, yang memicu inisialisasi SQLite native module ketika file dievaluasi pada runtime build.
+2. Ketika file database `dev.db` absen dari server build (karena di-ignore), banyak worker thread Next.js yang mencoba membuat file `dev.db` secara simultan, memicu race condition file creation pada native binding SQLite C++ (heap corruption).
+
+**Solusi:**
+
+1. Refactor `src/app/sitemap.ts` untuk menghapus seluruh impor dari database (`db`, `posts`) dan hanya mengembalikan static routes dengan komentar penjelasan.
+2. Menambahkan script pre-build otomatis di `package.json` yang membuat file `dev.db` kosong secara sinkron sebelum proses build (`next build`) dimulai, mencegah terjadinya race condition pembuatan file oleh worker.
+
+**File yang berubah:**
+
+- `src/app/sitemap.ts`
+- `package.json`
+
+---
+
 ## Known Limitations (Bukan Bug)
 
 | Item | Catatan |

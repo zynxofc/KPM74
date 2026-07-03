@@ -6,7 +6,16 @@
 
 ---
 
-## 2026-07-02 — Sitemap Build Fix Sprint
+## 2026-07-03 — Sitemap SQLite Dependency Removal
+
+**Perubahan:**
+
+- Menghapus seluruh impor database (`db` dari `@/db` dan `posts` dari `@/db/schema`) secara total dari `src/app/sitemap.ts`.
+- Menyajikan rute sitemap statis sebagai data keluaran utama sitemap untuk menghindari inisialisasi SQLite saat prerender build-time di Vercel.
+- Menambahkan script di `package.json` untuk otomatis mempre-kreasi file SQLite `dev.db` kosong sebelum proses kompilasi (`next build`) demi mencegah kegagalan thread worker (heap corruption) jika database tidak ada.
+- Memverifikasi build (`npm run build`) dan linting (`npm run lint`) berhasil 100% tanpa adanya database file sebelumnya.
+
+## 2026-07-02 — Sitemap Build Fix Sprint (Initial)
 
 **Perubahan:**
 

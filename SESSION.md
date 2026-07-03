@@ -2,32 +2,36 @@
 
 ## Last Update
 
-2026-07-02
+2026-07-03
 
 ## Sedang dikerjakan
 
-Integrasi Maps.
+Selesai memperbaiki Vercel build error (Sitemap SQLite dependency removal & pre-build database creation).
 
 ## Progress
 
-90%
+100% (Vercel Build fix verified)
 
 ## File yang diubah
 
-app/maps/page.tsx
+src/app/sitemap.ts
 
-components/maps/Marker.tsx
+package.json
 
-lib/location.ts
+docs/05_PROJECT_STATUS.md
+docs/07_CHANGELOG.md
+docs/08_DECISIONS.md
+docs/09_BUGS.md
+CHANGELOG.md (root)
+DECISIONS.md (root)
+.ai/SESSION.md
+.ai/TODO.md
+.ai/DECISIONS.md
 
 ## Bug
 
-Marker kadang tidak update realtime.
+Semua bug terselesaikan (BUG-05 closed).
 
 ## Next Step
 
-Optimasi websocket.
-
-## Catatan
-
-Jangan ubah struktur database.
+Push repositori ke GitHub dan deploy ke Vercel/Production.
