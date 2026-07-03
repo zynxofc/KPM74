@@ -15,10 +15,10 @@ export const PREVIEW_SETTINGS = {
 };
 
 export const PREVIEW_MEMBERS = [
-  { id: 1, name: "Budi Santoso", nimNip: "123456789", role: "Ketua Kelompok", photoUrl: "" },
-  { id: 2, name: "Siti Rahma", nimNip: "123456790", role: "Sekretaris", photoUrl: "" },
-  { id: 3, name: "Dewi Lestari", nimNip: "123456791", role: "Bendahara", photoUrl: "" },
-  { id: 4, name: "Ahmad Fauzi", nimNip: "123456792", role: "Divisi Humas", photoUrl: "" },
+  { id: 1, name: "Budi Santoso", nimNip: "123456789", role: "Ketua Kelompok", photoUrl: "", createdAt: "2026-07-02T12:00:00.000Z" },
+  { id: 2, name: "Siti Rahma", nimNip: "123456790", role: "Sekretaris", photoUrl: "", createdAt: "2026-07-02T12:00:00.000Z" },
+  { id: 3, name: "Dewi Lestari", nimNip: "123456791", role: "Bendahara", photoUrl: "", createdAt: "2026-07-02T12:00:00.000Z" },
+  { id: 4, name: "Ahmad Fauzi", nimNip: "123456792", role: "Divisi Humas", photoUrl: "", createdAt: "2026-07-02T12:00:00.000Z" },
 ];
 
 export const PREVIEW_PROGRAMS = [
@@ -28,8 +28,9 @@ export const PREVIEW_PROGRAMS = [
     description: "Pelatihan digital marketing dan pembuatan toko online untuk pelaku UMKM di desa binaan.",
     startDate: "2026-07-05",
     endDate: "2026-07-10",
-    status: "selesai",
+    status: "selesai" as const,
     documentationUrl: "",
+    createdAt: "2026-07-02T12:00:00.000Z",
   },
   {
     id: 2,
@@ -37,14 +38,15 @@ export const PREVIEW_PROGRAMS = [
     description: "Penyuluhan gizi seimbang dan pembagian PMT (Pemberian Makanan Tambahan) di Posyandu.",
     startDate: "2026-07-12",
     endDate: "2026-07-15",
-    status: "berjalan",
+    status: "berjalan" as const,
     documentationUrl: "",
+    createdAt: "2026-07-02T12:00:00.000Z",
   },
 ];
 
 export const PREVIEW_GALLERY = [
-  { id: 1, title: "Sosialisasi UMKM", type: "image" as const, fileUrl: "", caption: "Foto bersama pelaku UMKM" },
-  { id: 2, title: "Penyuluhan Stunting", type: "image" as const, fileUrl: "", caption: "Penyuluhan di Balai Desa" },
+  { id: 1, title: "Sosialisasi UMKM", type: "image" as const, fileUrl: "", caption: "Foto bersama pelaku UMKM", createdAt: "2026-07-02T12:00:00.000Z" },
+  { id: 2, title: "Penyuluhan Stunting", type: "image" as const, fileUrl: "", caption: "Penyuluhan di Balai Desa", createdAt: "2026-07-02T12:00:00.000Z" },
 ];
 
 export const PREVIEW_POSTS = [
@@ -56,6 +58,7 @@ export const PREVIEW_POSTS = [
     category: "Kegiatan",
     thumbnailUrl: "",
     publishedAt: "2026-07-02T12:00:00.000Z",
+    createdAt: "2026-07-02T12:00:00.000Z",
   },
   {
     id: 2,
@@ -65,22 +68,24 @@ export const PREVIEW_POSTS = [
     category: "Artikel",
     thumbnailUrl: "",
     publishedAt: "2026-07-03T09:00:00.000Z",
+    createdAt: "2026-07-03T09:00:00.000Z",
   },
 ];
 
 export const PREVIEW_FAQS = [
-  { id: 1, question: "Berapa lama kegiatan KPM berlangsung?", answer: "Kegiatan KPM berlangsung selama 30 hari penuh di lokasi posko desa binaan." },
-  { id: 2, question: "Siapa saja sasaran program kerja KPM?", answer: "Sasaran utama program kerja meliputi pelaku UMKM, anak usia balita, serta perangkat desa setempat." },
+  { id: 1, question: "Berapa lama kegiatan KPM berlangsung?", answer: "Kegiatan KPM berlangsung selama 30 hari penuh di lokasi posko desa binaan.", createdAt: "2026-07-02T12:00:00.000Z" },
+  { id: 2, question: "Siapa saja sasaran program kerja KPM?", answer: "Sasaran utama program kerja meliputi pelaku UMKM, anak usia balita, serta perangkat desa setempat.", createdAt: "2026-07-02T12:00:00.000Z" },
 ];
 
 export const PREVIEW_LOCATIONS = [
   {
     id: 1,
     name: "Posko Utama KPM",
-    category: "Posko KPM",
+    category: "posko" as const,
     latitude: -7.5,
     longitude: 110.4,
     description: "Tempat tinggal dan pusat koordinasi mahasiswa KPM.",
     googleMapsUrl: "https://maps.google.com",
+    createdAt: "2026-07-02T12:00:00.000Z",
   },
 ];

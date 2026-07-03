@@ -96,3 +96,4 @@ Semua fitur utama selesai, build dan lint bersih, halaman publik dan admin lengk
 | Documentation Sprint | 2026-07-02 | Migrasi ke Documentation Driven Development |
 | Sitemap Build Fix Sprint | 2026-07-03 | Menghapus dependensi SQLite dari sitemap dan mempre-kreasi dev.db saat build demi perbaikan deployment Vercel |
 | Vercel Preview Mode Sprint | 2026-07-03 | Menambahkan Preview Mode terpusat berbasis env PREVIEW_MODE=true untuk deployment demo tanpa SQLite |
+| SQLite Decoupling Fix Sprint | 2026-07-03 | Memutus static import chain ke database pada halaman publik dengan dynamic imports demi perbaikan error runtime di Vercel |

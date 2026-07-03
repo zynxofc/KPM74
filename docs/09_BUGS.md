@@ -143,6 +143,37 @@ Build Vercel gagal dengan error `SqliteError: no such table: posts` saat pra-ren
 
 ---
 
+### BUG-06 — SQLite Import Chain Side-Effects on Vercel Serverless Runtime
+
+**Ditemukan:** 2026-07-03
+**Diselesaikan:** 2026-07-03
+**Severity:** Critical
+
+**Deskripsi:**
+Meskipun query database tidak dieksekusi saat Preview Mode aktif, serverless function Vercel di `/` tetap memicu `SqliteError: unable to open database file`.
+
+**Root Cause:**
+Halaman publik memiliki import static `import { db } from "@/db"`. Pada saat kompilasi Next.js, ini mengaitkan modul database ke dalam chunk server-side halaman `/page.js`. Ketika serverless function memproses request di Vercel runtime, modul `@/db` dievaluasi pada saat modul dimuat (import-time). Meskipun evaluasi di dalam `src/db/index.ts` memiliki block `if (isPreviewMode())`, native bindings dari Node.js/Webpack tetap memicu pemuatan side-effects atau evaluasi chunk database yang memanggil native SQLite driver.
+
+**Solusi:**
+1. Menghapus seluruh static import `@/db` dan `@/db/schema` dari seluruh 8 halaman publik.
+2. Memisahkan data-fetching logic ke dalam dynamic services helper di `src/lib/preview/index.ts` dengan menggunakan dynamic import `import()`.
+3. Halaman publik hanya mengimpor wrapper service (seperti `getSiteSettings()`, `getMembersList()`). Apabila `isPreviewMode()` adalah true, ia langsung mengembalikan mock data statis tanpa mengeksekusi baris dynamic `import("@/db")`, sehingga memutuskan total import chain SQLite dari bundle halaman publik.
+
+**File yang berubah:**
+- `src/lib/preview/index.ts`
+- `src/lib/preview/preview-data.ts`
+- `src/app/(public)/page.tsx`
+- `src/app/(public)/profil/page.tsx`
+- `src/app/(public)/program-kerja/page.tsx`
+- `src/app/(public)/galeri/page.tsx`
+- `src/app/(public)/berita/page.tsx`
+- `src/app/(public)/berita/[slug]/page.tsx`
+- `src/app/(public)/faq/page.tsx`
+- `src/app/(public)/peta-lokasi/page.tsx`
+
+---
+
 ## Known Limitations (Bukan Bug)
 
 | Item | Catatan |

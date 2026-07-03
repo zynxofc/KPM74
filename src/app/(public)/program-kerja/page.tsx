@@ -1,21 +1,13 @@
-import { db } from "@/db";
-import { settings, programs } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import { GlassCard } from "@/components/ui/GlassCard";
 import type { Metadata } from "next";
 import { FolderKanban, Calendar, CheckCircle2, Clock, PlayCircle } from "lucide-react";
-import { isPreviewMode, getPreviewData } from "@/lib/preview";
+import { getSiteSettings, getProgramsList } from "@/lib/preview";
 
 export const revalidate = 0;
 
 export async function generateMetadata(): Promise<Metadata> {
-  let siteName = "LinTree KPM";
-  if (isPreviewMode()) {
-    siteName = getPreviewData("settings").siteName;
-  } else {
-    const [siteSettings] = await db.select().from(settings).where(eq(settings.id, 1)).limit(1);
-    siteName = siteSettings?.siteName || "LinTree KPM";
-  }
+  const siteSettings = await getSiteSettings();
+  const siteName = siteSettings?.siteName || "LinTree KPM";
   return {
     title: `Program Kerja Kelompok — ${siteName}`,
     description: `Ikuti perkembangan dan status rencana, jalannya program, serta dokumentasi hasil program kerja pengabdian Kuliah Pengabdian Masyarakat (KPM) ${siteName}.`,
@@ -59,17 +51,8 @@ function formatDate(isoDate: string): string {
 }
 
 export default async function ProgramKerjaPage() {
-  let siteSettings: typeof settings.$inferSelect | null = null;
-  let allPrograms: (typeof programs.$inferSelect)[];
-
-  if (isPreviewMode()) {
-    siteSettings = getPreviewData("settings");
-    allPrograms = getPreviewData("programs");
-  } else {
-    const [currentSettings] = await db.select().from(settings).where(eq(settings.id, 1)).limit(1);
-    siteSettings = currentSettings;
-    allPrograms = await db.select().from(programs);
-  }
+  const siteSettings = await getSiteSettings();
+  const allPrograms = await getProgramsList();
 
   const siteName = siteSettings?.siteName || "LinTree KPM";
 

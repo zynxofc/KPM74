@@ -1,10 +1,8 @@
-import { db } from "@/db";
-import { mapLocations } from "@/db/schema";
 import { GlassCard } from "@/components/ui/GlassCard";
 import MapWrapper from "@/components/ui/MapWrapper";
 import { MapPin } from "lucide-react";
 import type { Metadata } from "next";
-import { isPreviewMode, getPreviewData } from "@/lib/preview";
+import { getLocationsList } from "@/lib/preview";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://lintreekpm.vercel.app";
 
@@ -30,7 +28,7 @@ export const metadata: Metadata = {
 export const revalidate = 0; // Ensure data is fetched fresh from SQLite database
 
 export default async function PetaLokasiPage() {
-  const locations = isPreviewMode() ? getPreviewData("locations") : await db.select().from(mapLocations);
+  const locations = await getLocationsList();
 
   const legends = [
     { label: "Posko KPM", bg: "bg-teal-500" },

@@ -6,37 +6,27 @@
 
 ## Sedang dikerjakan
 
-Selesai mengimplementasikan Vercel Preview Mode (Database-free Preview Mode).
+Selesai mengimplementasikan SQLite Decoupling pada Vercel Runtime (Preview Mode Fix).
 
 ## Progress
 
-100% (Vercel Preview Mode verified)
+100% (Vercel Preview Mode dynamic decoupling verified)
 
 ## File yang diubah
 
-src/lib/preview/index.ts (new)
-src/lib/preview/preview-data.ts (new)
-src/db/index.ts
+src/lib/preview/index.ts
+src/lib/preview/preview-data.ts
 src/app/(public)/* (page.tsx, profil, program-kerja, galeri, berita, berita/[slug], faq, peta-lokasi)
-src/app/(admin)/admin/layout.tsx
-src/app/(admin)/admin/anggota/page.tsx
-src/app/(admin)/admin/berita/page.tsx
-src/app/(admin)/admin/faq/page.tsx
-src/app/(admin)/admin/galeri/page.tsx
-src/app/(admin)/admin/pengaturan/page.tsx
-src/app/(admin)/admin/peta-lokasi/page.tsx
-src/app/(admin)/admin/program-kerja/page.tsx
-src/app/(admin)/admin/activity-log/page.tsx
-src/lib/auth/session.ts
-src/lib/auth/actions.ts
-src/lib/auth/log.ts
-src/lib/admin/health.ts
-src/lib/admin/actions.ts
+docs/05_PROJECT_STATUS.md
+docs/07_CHANGELOG.md
+docs/09_BUGS.md
+CHANGELOG.md (root)
+walkthrough.md (artifact)
 
 ## Bug
 
-Semua bug terselesaikan.
+Semua bug terselesaikan (BUG-06 closed).
 
 ## Next Step
 
-Deploy ke Vercel dengan env PREVIEW_MODE=true, ADMIN_USERNAME, dan ADMIN_PASSWORD.
+Deploy ke Vercel dengan env PREVIEW_MODE=true (atau auto-detect via VERCEL=1), ADMIN_USERNAME, dan ADMIN_PASSWORD.

@@ -2,32 +2,28 @@
 
 ## Last Update
 
-2026-07-03 — Vercel Preview Mode Integration
+2026-07-03 — SQLite Decoupling on Vercel Runtime
 
 ## Status
 
-PROJECT READY FOR RELEASE v1.1. (Vercel Preview Mode 100% verified with clean build & lint)
+PROJECT READY FOR RELEASE v1.2. (Vercel Preview Mode 100% dynamic import decoupled and verified)
 
 ## Pekerjaan Sesi Ini
 
-Vercel Preview Mode Integration:
+SQLite Decoupling on Vercel Runtime:
 
-1. Membuat modul helper `src/lib/preview/` berisi `isPreviewMode()`, `getPreviewData()`, `getPreviewPostBySlug()`, dan data preview statis `preview-data.ts`.
-2. Mengubah `src/db/index.ts` agar inisialisasi SQLite database dilewati dan diset ke `{}` kosong saat `PREVIEW_MODE=true` aktif.
-3. Menghubungkan seluruh 8 halaman publik (`/`, `/profil`, `/program-kerja`, `/galeri`, `/berita`, `/berita/[slug]`, `/faq`, `/peta-lokasi`) untuk merender data statis dari modul preview secara transparan dan bebas dari database queries.
-4. Memasang banner warning "Preview Deployment - Database dinonaktifkan" di layout dashboard admin (`src/app/(admin)/admin/layout.tsx`).
-5. Menambahkan logic pengaman pada login panel (`src/lib/auth/actions.ts`) yang memvalidasi username dan password langsung terhadap env `ADMIN_USERNAME` dan `ADMIN_PASSWORD` tanpa ketergantungan database saat Preview Mode.
-6. Mengamankan seluruh 19 database-modifying Server Actions di `src/lib/admin/actions.ts` agar mengembalikan pesan "Fitur dinonaktifkan pada Preview Deployment." ketika diakses di Preview Mode.
-7. Memperbarui utility health check (`src/lib/admin/health.ts`) agar early-return status "Preview Mode" tanpa membaca database atau filesystem.
-8. Memverifikasi build dan linter 100% bersih tanpa error (0 errors).
+1. Membuat dynamic service helpers di `src/lib/preview/index.ts` (seperti `getSiteSettings`, `getMembersList`, `getNewsPostDetail`, dll) yang menggunakan `await import()` secara dinamis.
+2. Memodifikasi seluruh 8 halaman publik untuk menghapus static import ke `@/db` dan `@/db/schema` secara total.
+3. Halaman publik sekarang memanggil dynamic service helpers tersebut. Di bawah Preview Mode, baris dynamic import database tidak pernah dieksekusi, sehingga SQLite native drivers tidak pernah dievaluasi atau dimuat di Vercel.
+4. Menambahkan `createdAt` ke mock data dan mengubah location category enum di `src/lib/preview/preview-data.ts` agar conform 100% dengan tipe data skema Drizzle, menghilangkan warnings dan TypeScript errors.
+5. Memverifikasi hasil build Next.js sukses 100% dengan type checking.
+6. Memverifikasi bundle `.next` output dan memastikan tidak ada referensi ke `better-sqlite3`, `new Database`, `drizzle`, maupun `src/db/index` pada bundle halaman publik.
 
 ## Catatan Penting
 
-- Preview Mode diaktifkan menggunakan environment variable `PREVIEW_MODE=true`.
-- Pada Preview Mode, SQLite database tidak dibuka/diakses sama sekali, dan better-sqlite3/drizzle tidak diinisialisasi.
-- Seluruh CRUD di admin dinonaktifkan dengan pesan error "Fitur dinonaktifkan pada Preview Deployment."
-- Login ke panel admin di Vercel menggunakan `ADMIN_USERNAME` dan `ADMIN_PASSWORD` yang didapat dari environment variables (gagal jika env tidak diset).
+- Preview Mode diaktifkan menggunakan environment variable `PREVIEW_MODE=true` atau secara otomatis terdeteksi jika `VERCEL=1`.
+- Halaman publik 100% steril dari import SQLite baik secara static maupun dynamic runtime evaluation di Preview Mode.
 
 ## Next Step
 
-Deploy repositori ke Vercel dengan menyertakan `PREVIEW_MODE=true`, `ADMIN_USERNAME`, dan `ADMIN_PASSWORD` di panel environment variables Vercel.
+Deploy repositori ke Vercel dengan menyertakan `PREVIEW_MODE=true`, `ADMIN_USERNAME`, dan `ADMIN_PASSWORD`.

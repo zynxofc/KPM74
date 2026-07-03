@@ -1,21 +1,13 @@
-import { db } from "@/db";
-import { settings, members } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import { GlassCard } from "@/components/ui/GlassCard";
 import type { Metadata } from "next";
 import { Users, BookOpen, Compass, Award } from "lucide-react";
-import { isPreviewMode, getPreviewData } from "@/lib/preview";
+import { getSiteSettings, getMembersList } from "@/lib/preview";
 
 export const revalidate = 0;
 
 export async function generateMetadata(): Promise<Metadata> {
-  let siteName = "LinTree KPM";
-  if (isPreviewMode()) {
-    siteName = getPreviewData("settings").siteName;
-  } else {
-    const [siteSettings] = await db.select().from(settings).where(eq(settings.id, 1)).limit(1);
-    siteName = siteSettings?.siteName || "LinTree KPM";
-  }
+  const siteSettings = await getSiteSettings();
+  const siteName = siteSettings?.siteName || "LinTree KPM";
   return {
     title: `Profil & Anggota Kelompok — ${siteName}`,
     description: `Kenali visi, misi, kata sambutan, dan susunan struktur organisasi anggota kelompok Kuliah Pengabdian Masyarakat (KPM) ${siteName}.`,
@@ -23,17 +15,8 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ProfilPage() {
-  let siteSettings: typeof settings.$inferSelect | null = null;
-  let allMembers: (typeof members.$inferSelect)[];
-
-  if (isPreviewMode()) {
-    siteSettings = getPreviewData("settings");
-    allMembers = getPreviewData("members");
-  } else {
-    const [currentSettings] = await db.select().from(settings).where(eq(settings.id, 1)).limit(1);
-    siteSettings = currentSettings;
-    allMembers = await db.select().from(members);
-  }
+  const siteSettings = await getSiteSettings();
+  const allMembers = await getMembersList();
 
   const siteName = siteSettings?.siteName || "LinTree KPM";
   const siteDescription = siteSettings?.description || "Portal digital resmi Kuliah Pengabdian Masyarakat.";

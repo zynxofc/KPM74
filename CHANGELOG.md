@@ -4,6 +4,7 @@
 
 - Centralized Preview Mode helpers under the new `src/lib/preview/` module containing `isPreviewMode()`, `getPreviewData()`, `getPreviewPostBySlug()`, and `preview-data.ts`.
 - Configured database client in `src/db/index.ts` to skip SQLite loading and initialize `db` to `{}` when `PREVIEW_MODE=true` is set.
+- Decoupled public data fetching helpers in `src/lib/preview/index.ts` using dynamic imports `import()`, severing all static SQLite/Drizzle references from public page server bundles.
 - Connected all 8 public routes (`/`, `/profil`, `/program-kerja`, `/galeri`, `/berita`, `/berita/[slug]`, `/faq`, `/peta-lokasi`) to dynamically load from static preview data helper instead of the database.
 - Added a "Preview Deployment - Database dinonaktifkan" banner to the admin panel header.
 - Updated authentication logic in `src/lib/auth/actions.ts` to validate logins against environment variables `ADMIN_USERNAME` and `ADMIN_PASSWORD` in Preview Mode.

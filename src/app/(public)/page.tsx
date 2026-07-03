@@ -1,9 +1,6 @@
-import { db } from "@/db";
-import { settings } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import LandingPageClient from "./LandingPageClient";
 import type { Metadata } from "next";
-import { isPreviewMode, getPreviewData } from "@/lib/preview";
+import { getSiteSettings } from "@/lib/preview";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://lintreekpm.vercel.app";
 
@@ -29,18 +26,7 @@ export const metadata: Metadata = {
 export const revalidate = 0;
 
 export default async function LandingPage() {
-  let currentSettings: typeof settings.$inferSelect | null = null;
-
-  if (isPreviewMode()) {
-    currentSettings = getPreviewData("settings");
-  } else {
-    const [dbSettings] = await db
-      .select()
-      .from(settings)
-      .where(eq(settings.id, 1))
-      .limit(1);
-    currentSettings = dbSettings;
-  }
+  const currentSettings = await getSiteSettings();
 
   // Fallback settings if not seeded yet
   const fallbackSettings = currentSettings || {

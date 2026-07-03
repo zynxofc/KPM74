@@ -1,8 +1,8 @@
 # TODO
 
-## Status: Preview Mode Integration Selesai
+## Status: SQLite Decoupling Selesai
 
-Project dalam status READY FOR RELEASE v1.1 & DEPLOYMENT (Vercel Preview Mode terverifikasi).
+Project dalam status READY FOR RELEASE v1.2 & DEPLOYMENT (Vercel Preview Mode dynamic decoupling terverifikasi).
 
 ## Task Aktif
 
@@ -13,7 +13,7 @@ Tidak ada task aktif.
 - TASK-01: Lighthouse Performance Audit (Medium)
 - TASK-02: Dark Mode Toggle UI (Low)
 - TASK-03: Maps Realtime Updates (Medium)
-- TASK-04: Deployment ke Production & GitHub Release v1.1 (High — siap dijalankan)
+- TASK-04: Deployment ke Production & GitHub Release v1.2 (High — siap dijalankan)
 
 ## Selesai
 
@@ -27,3 +27,4 @@ Tidak ada task aktif.
 - [x] Release notes v1.0 & professional README.md
 - [x] Fix Vercel build error on sitemap page compilation
 - [x] Implement Vercel Preview Mode with environment variable PREVIEW_MODE=true
+- [x] Decouple SQLite import chain statically on all public routes for Vercel runtime

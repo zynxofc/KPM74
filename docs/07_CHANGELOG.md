@@ -13,6 +13,7 @@
 - Membuat modul helper `src/lib/preview/` berisi `isPreviewMode()`, `getPreviewData()`, `getPreviewPostBySlug()`, dan data preview statis `preview-data.ts`.
 - Mengubah `src/db/index.ts` agar inisialisasi SQLite database dilewati dan diset ke `{}` kosong saat `PREVIEW_MODE=true` aktif.
 - Menghubungkan seluruh 8 halaman publik (`/`, `/profil`, `/program-kerja`, `/galeri`, `/berita`, `/berita/[slug]`, `/faq`, `/peta-lokasi`) untuk merender data statis dari modul preview secara transparan dan bebas dari database queries.
+- Memisahkan data-fetching logic halaman publik ke dynamic services helper di `src/lib/preview/index.ts` menggunakan dynamic import `import()` untuk memutuskan static import chain ke SQLite database, sehingga Vercel serverless functions tidak mengevaluasi atau memuat SQLite driver saat diakses.
 - Memasang banner warning "Preview Deployment - Database dinonaktifkan" di layout dashboard admin (`src/app/(admin)/admin/layout.tsx`).
 - Menambahkan logic pengaman pada login panel (`src/lib/auth/actions.ts`) yang memvalidasi username dan password langsung terhadap env `ADMIN_USERNAME` dan `ADMIN_PASSWORD` tanpa ketergantungan database saat Preview Mode.
 - Mengamankan seluruh 19 database-modifying Server Actions di `src/lib/admin/actions.ts` agar mengembalikan pesan "Fitur dinonaktifkan pada Preview Deployment." ketika diakses di Preview Mode.
