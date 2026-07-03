@@ -3,6 +3,7 @@ import { settings } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { SettingsForm } from "@/components/admin/SettingsForm";
 import type { Metadata } from "next";
+import { isPreviewMode, getPreviewData } from "@/lib/preview";
 
 export const metadata: Metadata = {
   title: "Pengaturan Portal — LinTree Admin",
@@ -12,12 +13,18 @@ export const metadata: Metadata = {
 export const revalidate = 0;
 
 export default async function SettingsPage() {
-  // Fetch current settings row
-  const [currentSettings] = await db
-    .select()
-    .from(settings)
-    .where(eq(settings.id, 1))
-    .limit(1);
+  let currentSettings: typeof settings.$inferSelect | null = null;
+
+  if (isPreviewMode()) {
+    currentSettings = getPreviewData("settings");
+  } else {
+    const [dbSettings] = await db
+      .select()
+      .from(settings)
+      .where(eq(settings.id, 1))
+      .limit(1);
+    currentSettings = dbSettings;
+  }
 
   // If settings not seeded, provide fallback to match signature
   const fallbackSettings = currentSettings || {

@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { programs } from "@/db/schema";
 import { ProgramsManager } from "@/components/admin/ProgramsManager";
 import type { Metadata } from "next";
+import { isPreviewMode, getPreviewData } from "@/lib/preview";
 
 export const metadata: Metadata = {
   title: "Manajemen Program Kerja — LinTree Admin",
@@ -11,8 +12,9 @@ export const metadata: Metadata = {
 export const revalidate = 0;
 
 export default async function AdminProgramsPage() {
-  // Query all programs sorted by id descending
-  const programsList = await db.select().from(programs);
+  const programsList = isPreviewMode()
+    ? getPreviewData("programs")
+    : await db.select().from(programs);
 
   return <ProgramsManager initialPrograms={programsList} />;
 }

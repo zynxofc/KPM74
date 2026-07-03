@@ -1,11 +1,21 @@
-import { drizzle } from "drizzle-orm/better-sqlite3";
-import Database from "better-sqlite3";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-require-imports */
 import * as schema from "./schema";
 
-const sqlitePath = process.env.DATABASE_URL
-  ? process.env.DATABASE_URL.replace(/^file:/, "")
-  : "dev.db";
+export let db: any;
 
-const sqlite = new Database(sqlitePath);
-export const db = drizzle(sqlite, { schema });
+if (process.env.PREVIEW_MODE === "true") {
+  db = {} as any;
+} else {
+  const Database = require("better-sqlite3");
+  const { drizzle } = require("drizzle-orm/better-sqlite3");
+
+  const sqlitePath = process.env.DATABASE_URL
+    ? process.env.DATABASE_URL.replace(/^file:/, "")
+    : "dev.db";
+
+  const sqlite = new Database(sqlitePath);
+  db = drizzle(sqlite, { schema });
+}
+
 export type DatabaseInstance = typeof db;

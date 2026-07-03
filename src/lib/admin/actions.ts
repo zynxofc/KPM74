@@ -9,6 +9,7 @@ import { getSession } from "@/lib/auth/session";
 import { logActivity } from "@/lib/auth/log";
 import { settingsSchema, memberSchema, programSchema, mapLocationSchema, gallerySchema, postSchema, faqSchema } from "@/lib/validations";
 import { storageService } from "@/lib/storage";
+import { isPreviewMode } from "@/lib/preview";
 
 export interface SettingsState {
   error?: string;
@@ -36,6 +37,9 @@ export async function updateSettings(
   _prevState: SettingsState | null,
   formData: FormData
 ): Promise<SettingsState> {
+  if (isPreviewMode()) {
+    return { error: "Fitur dinonaktifkan pada Preview Deployment." };
+  }
   const session = await getSession();
   if (!session) {
     return { error: "Unauthorized. Silakan login kembali." };
@@ -147,6 +151,9 @@ export async function createMember(
   _prevState: ActionState | null,
   formData: FormData
 ): Promise<ActionState> {
+  if (isPreviewMode()) {
+    return { error: "Fitur dinonaktifkan pada Preview Deployment." };
+  }
   const session = await getSession();
   if (!session) {
     return { error: "Unauthorized. Silakan login kembali." };
@@ -224,6 +231,9 @@ export async function updateMember(
   _prevState: ActionState | null,
   formData: FormData
 ): Promise<ActionState> {
+  if (isPreviewMode()) {
+    return { error: "Fitur dinonaktifkan pada Preview Deployment." };
+  }
   const session = await getSession();
   if (!session) {
     return { error: "Unauthorized. Silakan login kembali." };
@@ -320,6 +330,9 @@ export async function updateMember(
 }
 
 export async function deleteMember(memberId: number): Promise<ActionState> {
+  if (isPreviewMode()) {
+    return { error: "Fitur dinonaktifkan pada Preview Deployment." };
+  }
   const session = await getSession();
   if (!session) {
     return { error: "Unauthorized." };
@@ -374,6 +387,9 @@ export async function createProgram(
   _prevState: ActionState | null,
   formData: FormData
 ): Promise<ActionState> {
+  if (isPreviewMode()) {
+    return { error: "Fitur dinonaktifkan pada Preview Deployment." };
+  }
   const session = await getSession();
   if (!session) {
     return { error: "Unauthorized. Silakan login kembali." };
@@ -455,6 +471,9 @@ export async function updateProgram(
   _prevState: ActionState | null,
   formData: FormData
 ): Promise<ActionState> {
+  if (isPreviewMode()) {
+    return { error: "Fitur dinonaktifkan pada Preview Deployment." };
+  }
   const session = await getSession();
   if (!session) {
     return { error: "Unauthorized. Silakan login kembali." };
@@ -555,6 +574,9 @@ export async function updateProgram(
 }
 
 export async function deleteProgram(programId: number): Promise<ActionState> {
+  if (isPreviewMode()) {
+    return { error: "Fitur dinonaktifkan pada Preview Deployment." };
+  }
   const session = await getSession();
   if (!session) {
     return { error: "Unauthorized." };
@@ -609,6 +631,9 @@ export async function createMapLocation(
   _prevState: ActionState | null,
   formData: FormData
 ): Promise<ActionState> {
+  if (isPreviewMode()) {
+    return { error: "Fitur dinonaktifkan pada Preview Deployment." };
+  }
   const session = await getSession();
   if (!session) {
     return { error: "Unauthorized. Silakan login kembali." };
@@ -669,6 +694,9 @@ export async function updateMapLocation(
   _prevState: ActionState | null,
   formData: FormData
 ): Promise<ActionState> {
+  if (isPreviewMode()) {
+    return { error: "Fitur dinonaktifkan pada Preview Deployment." };
+  }
   const session = await getSession();
   if (!session) {
     return { error: "Unauthorized. Silakan login kembali." };
@@ -735,6 +763,9 @@ export async function updateMapLocation(
 }
 
 export async function deleteMapLocation(locationId: number): Promise<ActionState> {
+  if (isPreviewMode()) {
+    return { error: "Fitur dinonaktifkan pada Preview Deployment." };
+  }
   const session = await getSession();
   if (!session) {
     return { error: "Unauthorized." };
@@ -781,6 +812,9 @@ export async function createGalleryItem(
   _prevState: ActionState | null,
   formData: FormData
 ): Promise<ActionState> {
+  if (isPreviewMode()) {
+    return { error: "Fitur dinonaktifkan pada Preview Deployment." };
+  }
   const session = await getSession();
   if (!session) {
     return { error: "Unauthorized. Silakan login kembali." };
@@ -858,6 +892,9 @@ export async function updateGalleryItem(
   _prevState: ActionState | null,
   formData: FormData
 ): Promise<ActionState> {
+  if (isPreviewMode()) {
+    return { error: "Fitur dinonaktifkan pada Preview Deployment." };
+  }
   const session = await getSession();
   if (!session) {
     return { error: "Unauthorized. Silakan login kembali." };
@@ -954,6 +991,9 @@ export async function updateGalleryItem(
 }
 
 export async function deleteGalleryItem(itemId: number): Promise<ActionState> {
+  if (isPreviewMode()) {
+    return { error: "Fitur dinonaktifkan pada Preview Deployment." };
+  }
   const session = await getSession();
   if (!session) {
     return { error: "Unauthorized." };
@@ -1008,6 +1048,9 @@ export async function createPost(
   _prevState: ActionState | null,
   formData: FormData
 ): Promise<ActionState> {
+  if (isPreviewMode()) {
+    return { error: "Fitur dinonaktifkan pada Preview Deployment." };
+  }
   const session = await getSession();
   if (!session) {
     return { error: "Unauthorized. Silakan login kembali." };
@@ -1098,6 +1141,9 @@ export async function updatePost(
   _prevState: ActionState | null,
   formData: FormData
 ): Promise<ActionState> {
+  if (isPreviewMode()) {
+    return { error: "Fitur dinonaktifkan pada Preview Deployment." };
+  }
   const session = await getSession();
   if (!session) {
     return { error: "Unauthorized. Silakan login kembali." };
@@ -1211,6 +1257,9 @@ export async function updatePost(
 }
 
 export async function deletePost(postId: number): Promise<ActionState> {
+  if (isPreviewMode()) {
+    return { error: "Fitur dinonaktifkan pada Preview Deployment." };
+  }
   const session = await getSession();
   if (!session) {
     return { error: "Unauthorized." };
@@ -1266,6 +1315,9 @@ export async function createFaq(
   _prevState: ActionState | null,
   formData: FormData
 ): Promise<ActionState> {
+  if (isPreviewMode()) {
+    return { error: "Fitur dinonaktifkan pada Preview Deployment." };
+  }
   const session = await getSession();
   if (!session) {
     return { error: "Unauthorized. Silakan login kembali." };
@@ -1318,6 +1370,9 @@ export async function updateFaq(
   _prevState: ActionState | null,
   formData: FormData
 ): Promise<ActionState> {
+  if (isPreviewMode()) {
+    return { error: "Fitur dinonaktifkan pada Preview Deployment." };
+  }
   const session = await getSession();
   if (!session) {
     return { error: "Unauthorized. Silakan login kembali." };
@@ -1376,6 +1431,9 @@ export async function updateFaq(
 }
 
 export async function deleteFaq(faqId: number): Promise<ActionState> {
+  if (isPreviewMode()) {
+    return { error: "Fitur dinonaktifkan pada Preview Deployment." };
+  }
   const session = await getSession();
   if (!session) {
     return { error: "Unauthorized." };

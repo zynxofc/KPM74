@@ -3,12 +3,15 @@ import { Sidebar } from "@/components/admin/Sidebar";
 import { Header } from "@/components/admin/Header";
 import { ToastProvider } from "@/components/ui/Toast";
 import { ThemeProvider } from "@/lib/theme/ThemeProvider";
+import { isPreviewMode } from "@/lib/preview";
 
 export default function AdminLayout({
   children,
 }: Readonly<{
   children: ReactNode;
 }>) {
+  const isPreview = isPreviewMode();
+
   return (
     <ThemeProvider>
       <ToastProvider>
@@ -23,6 +26,14 @@ export default function AdminLayout({
             <Header />
             <main className="flex-grow p-6 overflow-y-auto">
               <div className="max-w-7xl mx-auto space-y-6">
+                {isPreview && (
+                  <div className="p-4 rounded-2xl border border-amber-200/50 dark:border-amber-900/50 bg-amber-50/50 dark:bg-amber-950/20 text-amber-800 dark:text-amber-300 flex items-center gap-3 backdrop-blur-md">
+                    <span className="text-xl">⚠️</span>
+                    <div className="text-sm font-semibold">
+                      Preview Deployment - Database dinonaktifkan
+                    </div>
+                  </div>
+                )}
                 {children}
               </div>
             </main>

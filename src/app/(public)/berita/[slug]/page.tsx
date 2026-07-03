@@ -6,6 +6,7 @@ import Link from "next/link";
 import { GlassCard } from "@/components/ui/GlassCard";
 import type { Metadata } from "next";
 import { ArrowLeft, Calendar, User, Tag, FileText } from "lucide-react";
+import { isPreviewMode, getPreviewData, getPreviewPostBySlug } from "@/lib/preview";
 
 export const revalidate = 0;
 
@@ -17,12 +18,22 @@ interface Params {
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
-  const [post] = await db.select().from(posts).where(eq(posts.slug, slug)).limit(1);
-  const [siteSettings] = await db.select().from(settings).where(eq(settings.id, 1)).limit(1);
+  let post: typeof posts.$inferSelect | null = null;
+  let siteName = "LinTree KPM";
+
+  if (isPreviewMode()) {
+    const preview = getPreviewPostBySlug(slug);
+    post = preview.post;
+    siteName = getPreviewData("settings").siteName;
+  } else {
+    const [dbPost] = await db.select().from(posts).where(eq(posts.slug, slug)).limit(1);
+    const [siteSettings] = await db.select().from(settings).where(eq(settings.id, 1)).limit(1);
+    post = dbPost;
+    siteName = siteSettings?.siteName || "LinTree KPM";
+  }
   
   if (!post) return { title: "Berita Tidak Ditemukan" };
   
-  const siteName = siteSettings?.siteName || "LinTree KPM";
   // Strip html to get plain text description
   const plainText = post.content.replace(/<[^>]*>/g, " ");
   const description = plainText.substring(0, 150).trim() + "...";
@@ -48,20 +59,30 @@ function formatDate(isoDate: string | null): string {
 
 export default async function NewsDetailPage({ params }: Params) {
   const { slug } = await params;
+  let post: typeof posts.$inferSelect | null = null;
+  let recommendations: (typeof posts.$inferSelect)[];
 
-  // Fetch the article
-  const [post] = await db.select().from(posts).where(eq(posts.slug, slug)).limit(1);
+  if (isPreviewMode()) {
+    const preview = getPreviewPostBySlug(slug);
+    post = preview.post;
+    recommendations = preview.recommendations;
+  } else {
+    const [dbPost] = await db.select().from(posts).where(eq(posts.slug, slug)).limit(1);
+    post = dbPost;
+    if (!post) {
+      notFound();
+    }
+    recommendations = await db
+      .select()
+      .from(posts)
+      .where(ne(posts.id, post.id))
+      .orderBy(desc(posts.publishedAt))
+      .limit(3);
+  }
+
   if (!post) {
     notFound();
   }
-
-  // Fetch other articles as recommendations (up to 3 items)
-  const recommendations = await db
-    .select()
-    .from(posts)
-    .where(ne(posts.id, post.id))
-    .orderBy(desc(posts.publishedAt))
-    .limit(3);
 
   return (
     <div className="px-6 max-w-5xl mx-auto space-y-8 relative pb-12">

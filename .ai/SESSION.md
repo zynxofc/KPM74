@@ -2,28 +2,32 @@
 
 ## Last Update
 
-2026-07-03 — Sitemap SQLite Dependency Removal & Pre-build Fix
+2026-07-03 — Vercel Preview Mode Integration
 
 ## Status
 
-PROJECT READY FOR RELEASE v1.0 & DEPLOYMENT. (Vercel Build fix 100% verified without database)
+PROJECT READY FOR RELEASE v1.1. (Vercel Preview Mode 100% verified with clean build & lint)
 
 ## Pekerjaan Sesi Ini
 
-Sitemap SQLite Dependency Removal & Pre-build Fix:
+Vercel Preview Mode Integration:
 
-1. Refaktor `src/app/sitemap.ts` dengan menghapus total semua impor database (`db`) dan skema (`posts`), hanya memproses static routes guna mencegah inisialisasi SQLite secara tidak sengaja pada build/prerendering time.
-2. Modifikasi script `"build"` di `package.json` untuk otomatis mempre-kreasi file `dev.db` kosong secara sinkron sebelum kompilasi Next.js (`next build`) dimulai, guna menghindari race condition pembuatan database oleh thread worker (yang memicu heap corruption/segfault `3221226505`).
-3. Verifikasi lokal `npm run build` dan `npm run lint` sukses 100% tanpa adanya database file sebelumnya.
-4. Diperbarui dokumen keputusan teknis (`docs/08_DECISIONS.md`, `DECISIONS.md` root, dan `.ai/DECISIONS.md`) dengan pembaruan entri `DEC-09`.
-5. Diperbarui berkas log perubahan (`docs/07_CHANGELOG.md`, `CHANGELOG.md` root).
-6. Diperbarui berkas bug register (`docs/09_BUGS.md`) dengan menambahkan entri `BUG-05`.
+1. Membuat modul helper `src/lib/preview/` berisi `isPreviewMode()`, `getPreviewData()`, `getPreviewPostBySlug()`, dan data preview statis `preview-data.ts`.
+2. Mengubah `src/db/index.ts` agar inisialisasi SQLite database dilewati dan diset ke `{}` kosong saat `PREVIEW_MODE=true` aktif.
+3. Menghubungkan seluruh 8 halaman publik (`/`, `/profil`, `/program-kerja`, `/galeri`, `/berita`, `/berita/[slug]`, `/faq`, `/peta-lokasi`) untuk merender data statis dari modul preview secara transparan dan bebas dari database queries.
+4. Memasang banner warning "Preview Deployment - Database dinonaktifkan" di layout dashboard admin (`src/app/(admin)/admin/layout.tsx`).
+5. Menambahkan logic pengaman pada login panel (`src/lib/auth/actions.ts`) yang memvalidasi username dan password langsung terhadap env `ADMIN_USERNAME` dan `ADMIN_PASSWORD` tanpa ketergantungan database saat Preview Mode.
+6. Mengamankan seluruh 19 database-modifying Server Actions di `src/lib/admin/actions.ts` agar mengembalikan pesan "Fitur dinonaktifkan pada Preview Deployment." ketika diakses di Preview Mode.
+7. Memperbarui utility health check (`src/lib/admin/health.ts`) agar early-return status "Preview Mode" tanpa membaca database atau filesystem.
+8. Memverifikasi build dan linter 100% bersih tanpa error (0 errors).
 
 ## Catatan Penting
 
-- Dengan peniadaan import DB di `sitemap.ts` dan pre-build creation script `dev.db`, build process 100% steril dari dependensi database SQLite.
-- Setelah proses deploy selesai dan database termigrasi ke PostgreSQL di production, sitemap berita dinamis dapat diaktifkan kembali.
+- Preview Mode diaktifkan menggunakan environment variable `PREVIEW_MODE=true`.
+- Pada Preview Mode, SQLite database tidak dibuka/diakses sama sekali, dan better-sqlite3/drizzle tidak diinisialisasi.
+- Seluruh CRUD di admin dinonaktifkan dengan pesan error "Fitur dinonaktifkan pada Preview Deployment."
+- Login ke panel admin di Vercel menggunakan `ADMIN_USERNAME` dan `ADMIN_PASSWORD` yang didapat dari environment variables (gagal jika env tidak diset).
 
 ## Next Step
 
-Push repositori ke GitHub dan deploy ke Vercel/Railway.
+Deploy repositori ke Vercel dengan menyertakan `PREVIEW_MODE=true`, `ADMIN_USERNAME`, dan `ADMIN_PASSWORD` di panel environment variables Vercel.

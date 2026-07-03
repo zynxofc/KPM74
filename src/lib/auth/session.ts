@@ -2,10 +2,12 @@ import "server-only";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
+import { isPreviewMode } from "@/lib/preview";
+
 // ─────────────────────────────────────────────────────────────────────────────
 // JWT Configuration
 // ─────────────────────────────────────────────────────────────────────────────
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET || (isPreviewMode() ? "preview-secret-key-placeholder-32-chars-long" : undefined);
 if (!JWT_SECRET) {
   throw new Error("JWT_SECRET is not defined in environment variables.");
 }

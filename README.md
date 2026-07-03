@@ -168,6 +168,33 @@ Ini akan melakukan verifikasi kode TypeScript, menjalankan ESLint, mengoptimasi 
 
 ---
 
+## Preview Mode (Vercel / Demo)
+
+Project ini dilengkapi dengan **Preview Mode** yang dinamis untuk memudahkan demo UI/UX di platform serverless murni (seperti Vercel) tanpa memerlukan database SQLite.
+
+### 📌 Karakteristik & Batasan Preview Mode
+
+- **Tanpa Database / SQLite:** Ketika Preview Mode aktif, aplikasi tidak membuka SQLite, tidak menginisialisasi `better-sqlite3`, dan tidak melakukan koneksi/kueri ke database disk lokal.
+- **Data Statis (Mock Data):** Seluruh data pada 8 halaman publik (`/`, `/profil`, `/program-kerja`, `/galeri`, `/berita`, `/berita/[slug]`, `/faq`, `/peta-lokasi`) serta tabel di dashboard admin disajikan dari data preview statis.
+- **Login Dashboard:** Autentikasi ke halaman admin tetap berfungsi, namun validasinya dilakukan secara langsung terhadap environment variables `ADMIN_USERNAME` dan `ADMIN_PASSWORD` (tanpa querying user DB).
+- **CRUD Dinonaktifkan:** Operasi tulis, ubah, hapus, unggah gambar, dan hapus gambar di panel admin ditolak secara langsung dengan pesan kesalahan: *"Fitur dinonaktifkan pada Preview Deployment."*
+- **Health Check:** Health check tidak membaca database atau filesystem dan akan menampilkan status *"Preview Mode"*.
+
+### ⚙️ Cara Mengaktifkan
+
+Cukup tambahkan environment variable berikut pada environment target (misalnya di Dashboard Vercel / `.env.local` lokal):
+
+```bash
+PREVIEW_MODE=true
+ADMIN_USERNAME=admin-demo
+ADMIN_PASSWORD=password-demo-1234
+```
+
+> [!WARNING]
+> Preview Mode **BUKAN** merupakan Production Mode. Mode ini hanya ditujukan untuk tujuan demo visual antarmuka (UI Preview). Untuk deployment asli, pastikan `PREVIEW_MODE` dinonaktifkan (atau diset ke `false`) agar database SQLite lokal diaktifkan kembali.
+
+---
+
 ## License
 
 Didistribusikan di bawah Lisensi MIT. Lihat berkas `LICENSE` untuk informasi lebih lanjut.

@@ -9,6 +9,7 @@ import { users } from "@/db/schema";
 import { createSession, deleteSession } from "@/lib/auth/session";
 import { logActivity } from "@/lib/auth/log";
 import { loginSchema } from "@/lib/validations";
+import { isPreviewMode } from "@/lib/preview";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Login Server Action
@@ -28,6 +29,23 @@ export async function login(
   }
 
   const { username, password } = parsed.data;
+
+  // Preview Mode Auth bypass (explicit environment variables validation)
+  if (isPreviewMode()) {
+    const envUser = process.env.ADMIN_USERNAME;
+    const envPass = process.env.ADMIN_PASSWORD;
+
+    if (!envUser || !envPass) {
+      return { error: "ADMIN_USERNAME atau ADMIN_PASSWORD belum dikonfigurasi di environment." };
+    }
+
+    if (username === envUser && password === envPass) {
+      await createSession(1, username);
+      redirect("/admin");
+    } else {
+      return { error: "Kredensial tidak valid. Silakan coba lagi." };
+    }
+  }
 
   // Get client IP for audit log
   const headerStore = await headers();

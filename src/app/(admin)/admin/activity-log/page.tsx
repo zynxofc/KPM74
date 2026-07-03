@@ -3,6 +3,7 @@ import { activityLogs } from "@/db/schema";
 import { desc, eq, sql } from "drizzle-orm";
 import { ActivityLogViewer } from "@/components/admin/ActivityLogViewer";
 import type { Metadata } from "next";
+import { isPreviewMode } from "@/lib/preview";
 
 export const metadata: Metadata = {
   title: "Activity Log — LinTree Admin",
@@ -34,21 +35,30 @@ export default async function ActivityLogPage({ searchParams }: PageProps) {
         )
       : undefined;
 
-  const [logs, countResult] = await Promise.all([
-    db
-      .select()
-      .from(activityLogs)
-      .where(baseFilter)
-      .orderBy(desc(activityLogs.createdAt))
-      .limit(PAGE_SIZE)
-      .offset(offset),
-    db
-      .select({ total: sql<number>`count(*)` })
-      .from(activityLogs)
-      .where(baseFilter),
-  ]);
+  let logs: (typeof activityLogs.$inferSelect)[] = [];
+  let total = 0;
 
-  const total = countResult[0]?.total ?? 0;
+  if (isPreviewMode()) {
+    logs = [];
+    total = 0;
+  } else {
+    const [dbLogs, countResult] = await Promise.all([
+      db
+        .select()
+        .from(activityLogs)
+        .where(baseFilter)
+        .orderBy(desc(activityLogs.createdAt))
+        .limit(PAGE_SIZE)
+        .offset(offset),
+      db
+        .select({ total: sql<number>`count(*)` })
+        .from(activityLogs)
+        .where(baseFilter),
+    ]);
+    logs = dbLogs;
+    total = countResult[0]?.total ?? 0;
+  }
+
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   return (

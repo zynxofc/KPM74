@@ -1,8 +1,8 @@
 # TODO
 
-## Status: Sitemap Build Fix Sprint Selesai
+## Status: Preview Mode Integration Selesai
 
-Project dalam status READY FOR RELEASE v1.0 & DEPLOYMENT (Vercel Build fix terverifikasi).
+Project dalam status READY FOR RELEASE v1.1 & DEPLOYMENT (Vercel Preview Mode terverifikasi).
 
 ## Task Aktif
 
@@ -13,7 +13,7 @@ Tidak ada task aktif.
 - TASK-01: Lighthouse Performance Audit (Medium)
 - TASK-02: Dark Mode Toggle UI (Low)
 - TASK-03: Maps Realtime Updates (Medium)
-- TASK-04: Deployment ke Production & GitHub Release v1.0 (High — siap dijalankan)
+- TASK-04: Deployment ke Production & GitHub Release v1.1 (High — siap dijalankan)
 
 ## Selesai
 
@@ -26,3 +26,4 @@ Tidak ada task aktif.
 - [x] Deployment preparation & documentation (`docs/DEPLOYMENT.md`)
 - [x] Release notes v1.0 & professional README.md
 - [x] Fix Vercel build error on sitemap page compilation
+- [x] Implement Vercel Preview Mode with environment variable PREVIEW_MODE=true

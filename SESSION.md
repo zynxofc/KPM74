@@ -6,32 +6,37 @@
 
 ## Sedang dikerjakan
 
-Selesai memperbaiki Vercel build error (Sitemap SQLite dependency removal & pre-build database creation).
+Selesai mengimplementasikan Vercel Preview Mode (Database-free Preview Mode).
 
 ## Progress
 
-100% (Vercel Build fix verified)
+100% (Vercel Preview Mode verified)
 
 ## File yang diubah
 
-src/app/sitemap.ts
-
-package.json
-
-docs/05_PROJECT_STATUS.md
-docs/07_CHANGELOG.md
-docs/08_DECISIONS.md
-docs/09_BUGS.md
-CHANGELOG.md (root)
-DECISIONS.md (root)
-.ai/SESSION.md
-.ai/TODO.md
-.ai/DECISIONS.md
+src/lib/preview/index.ts (new)
+src/lib/preview/preview-data.ts (new)
+src/db/index.ts
+src/app/(public)/* (page.tsx, profil, program-kerja, galeri, berita, berita/[slug], faq, peta-lokasi)
+src/app/(admin)/admin/layout.tsx
+src/app/(admin)/admin/anggota/page.tsx
+src/app/(admin)/admin/berita/page.tsx
+src/app/(admin)/admin/faq/page.tsx
+src/app/(admin)/admin/galeri/page.tsx
+src/app/(admin)/admin/pengaturan/page.tsx
+src/app/(admin)/admin/peta-lokasi/page.tsx
+src/app/(admin)/admin/program-kerja/page.tsx
+src/app/(admin)/admin/activity-log/page.tsx
+src/lib/auth/session.ts
+src/lib/auth/actions.ts
+src/lib/auth/log.ts
+src/lib/admin/health.ts
+src/lib/admin/actions.ts
 
 ## Bug
 
-Semua bug terselesaikan (BUG-05 closed).
+Semua bug terselesaikan.
 
 ## Next Step
 
-Push repositori ke GitHub dan deploy ke Vercel/Production.
+Deploy ke Vercel dengan env PREVIEW_MODE=true, ADMIN_USERNAME, dan ADMIN_PASSWORD.

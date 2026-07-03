@@ -3,16 +3,17 @@ import { settings } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import LandingPageClient from "./LandingPageClient";
 import type { Metadata } from "next";
+import { isPreviewMode, getPreviewData } from "@/lib/preview";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://lintreekpm.vercel.app";
 
 export const metadata: Metadata = {
   title: "Beranda",
-  description: "Portal digital resmi Kuliah Pengabdian Masyarakat (KPM) — Pusat informasi, dokumentasi, publikasi, dan branding kelompok KPM.",
+  description: "Portal digital resmi Kuliah Pengabdian Masyarakat (KPM) — Pusat informasi, dokumentasi, publikasi, dan branding kelompok.",
   alternates: { canonical: BASE_URL },
   openGraph: {
     title: "LinTree KPM — Portal Resmi KPM",
-    description: "Portal digital resmi Kuliah Pengabdian Masyarakat (KPM) — Pusat informasi, dokumentasi, publikasi, dan branding kelompok KPM.",
+    description: "Portal digital resmi Kuliah Pengabdian Masyarakat (KPM) — Pusat informasi, dokumentasi, publikasi, dan branding kelompok.",
     url: BASE_URL,
     type: "website",
     images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "LinTree KPM" }],
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "LinTree KPM — Portal Resmi KPM",
-    description: "Portal digital resmi Kuliah Pengabdian Masyarakat (KPM) — Pusat informasi, dokumentasi, publikasi, dan branding kelompok KPM.",
+    description: "Portal digital resmi Kuliah Pengabdian Masyarakat (KPM) — Pusat informasi, dokumentasi, publikasi, dan branding kelompok.",
     images: ["/og-image.png"],
   },
 };
@@ -28,11 +29,18 @@ export const metadata: Metadata = {
 export const revalidate = 0;
 
 export default async function LandingPage() {
-  const [currentSettings] = await db
-    .select()
-    .from(settings)
-    .where(eq(settings.id, 1))
-    .limit(1);
+  let currentSettings: typeof settings.$inferSelect | null = null;
+
+  if (isPreviewMode()) {
+    currentSettings = getPreviewData("settings");
+  } else {
+    const [dbSettings] = await db
+      .select()
+      .from(settings)
+      .where(eq(settings.id, 1))
+      .limit(1);
+    currentSettings = dbSettings;
+  }
 
   // Fallback settings if not seeded yet
   const fallbackSettings = currentSettings || {

@@ -15,6 +15,7 @@ Portal digital resmi **LinTree KPM** untuk manajemen kegiatan KPM multidisiplin,
 - **Frontend**: Next.js 16 (App Router) dengan TypeScript, TailwindCSS, Framer Motion, Liquid Glass design system.
 - **Backend API**: Laravel REST API (terpisah, dikonsumsi via fetch di server actions).
 - **Database**: SQLite (development) via Drizzle ORM; schema didefinisi di `src/db/schema.ts`.
+- **Preview Mode**: Mode tanpa database (diaktifkan via environment `PREVIEW_MODE=true`) untuk demo UI murni di Vercel, menggunakan data statis di `src/lib/preview/`.
 - **Storage**: Abstraksi `storageService` (local storage adapter) untuk upload file.
 - **Keamanan**: Proxy (`src/proxy.ts`) melindungi semua route `/admin/*`.
 

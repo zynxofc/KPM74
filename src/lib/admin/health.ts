@@ -4,9 +4,10 @@ import { mapLocations } from "@/db/schema";
 import { count } from "drizzle-orm";
 import fs from "fs";
 import path from "path";
+import { isPreviewMode } from "@/lib/preview";
 
 export interface HealthData {
-  dbStatus: "connected" | "error";
+  dbStatus: "connected" | "error" | "Preview Mode";
   dbSizeKb: number;
   storageProvider: string;
   markersCount: number;
@@ -14,8 +15,18 @@ export interface HealthData {
 }
 
 export async function getHealthData(): Promise<HealthData> {
+  if (isPreviewMode()) {
+    return {
+      dbStatus: "Preview Mode",
+      dbSizeKb: 0,
+      storageProvider: process.env.STORAGE_PROVIDER ?? "local",
+      markersCount: 1,
+      buildTime: new Date().toISOString(),
+    };
+  }
+
   // --- Database status & size ---
-  let dbStatus: "connected" | "error" = "error";
+  let dbStatus: "connected" | "error" | "Preview Mode" = "error";
   let dbSizeKb = 0;
   let markersCount = 0;
 

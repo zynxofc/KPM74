@@ -6,6 +6,19 @@
 
 ---
 
+## 2026-07-03 — Vercel Preview Mode Integration
+
+**Perubahan:**
+
+- Membuat modul helper `src/lib/preview/` berisi `isPreviewMode()`, `getPreviewData()`, `getPreviewPostBySlug()`, dan data preview statis `preview-data.ts`.
+- Mengubah `src/db/index.ts` agar inisialisasi SQLite database dilewati dan diset ke `{}` kosong saat `PREVIEW_MODE=true` aktif.
+- Menghubungkan seluruh 8 halaman publik (`/`, `/profil`, `/program-kerja`, `/galeri`, `/berita`, `/berita/[slug]`, `/faq`, `/peta-lokasi`) untuk merender data statis dari modul preview secara transparan dan bebas dari database queries.
+- Memasang banner warning "Preview Deployment - Database dinonaktifkan" di layout dashboard admin (`src/app/(admin)/admin/layout.tsx`).
+- Menambahkan logic pengaman pada login panel (`src/lib/auth/actions.ts`) yang memvalidasi username dan password langsung terhadap env `ADMIN_USERNAME` dan `ADMIN_PASSWORD` tanpa ketergantungan database saat Preview Mode.
+- Mengamankan seluruh 19 database-modifying Server Actions di `src/lib/admin/actions.ts` agar mengembalikan pesan "Fitur dinonaktifkan pada Preview Deployment." ketika diakses di Preview Mode.
+- Memperbarui utility health check (`src/lib/admin/health.ts`) agar early-return status "Preview Mode" tanpa membaca database atau filesystem.
+- Memverifikasi build dan linter 100% bersih tanpa error (0 errors).
+
 ## 2026-07-03 — Sitemap SQLite Dependency Removal
 
 **Perubahan:**

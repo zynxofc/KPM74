@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { faqs } from "@/db/schema";
 import { FaqListClient } from "./FaqListClient";
 import type { Metadata } from "next";
+import { isPreviewMode, getPreviewData } from "@/lib/preview";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://lintreekpm.vercel.app";
 
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
 export const revalidate = 0;
 
 export default async function PublicFaqPage() {
-  const faqList = await db.select().from(faqs);
+  const faqList = isPreviewMode() ? getPreviewData("faqs") : await db.select().from(faqs);
 
   return (
     <div className="container mx-auto px-4 max-w-4xl py-12 sm:py-16 space-y-8">

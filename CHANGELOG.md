@@ -1,5 +1,16 @@
 # Changelog
 
+## 2026-07-03 (Vercel Preview Mode Integration)
+
+- Centralized Preview Mode helpers under the new `src/lib/preview/` module containing `isPreviewMode()`, `getPreviewData()`, `getPreviewPostBySlug()`, and `preview-data.ts`.
+- Configured database client in `src/db/index.ts` to skip SQLite loading and initialize `db` to `{}` when `PREVIEW_MODE=true` is set.
+- Connected all 8 public routes (`/`, `/profil`, `/program-kerja`, `/galeri`, `/berita`, `/berita/[slug]`, `/faq`, `/peta-lokasi`) to dynamically load from static preview data helper instead of the database.
+- Added a "Preview Deployment - Database dinonaktifkan" banner to the admin panel header.
+- Updated authentication logic in `src/lib/auth/actions.ts` to validate logins against environment variables `ADMIN_USERNAME` and `ADMIN_PASSWORD` in Preview Mode.
+- Guarded all 19 database-modifying Server Actions in `src/lib/admin/actions.ts` to reject operations with a friendly warning.
+- Updated the health check tool `src/lib/admin/health.ts` to early-return a mock "Preview Mode" status.
+- Verified build compiles successfully with 0 linting or TypeScript errors.
+
 ## 2026-07-03 (Sitemap SQLite Dependency Removal)
 
 - Completely removed database imports (`db` from `@/db` and `posts` from `@/db/schema`) from `src/app/sitemap.ts` to prevent build-time SQLite initialization.

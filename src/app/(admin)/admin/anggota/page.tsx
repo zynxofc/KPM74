@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { members } from "@/db/schema";
 import { MembersManager } from "@/components/admin/MembersManager";
 import type { Metadata } from "next";
+import { isPreviewMode, getPreviewData } from "@/lib/preview";
 
 export const metadata: Metadata = {
   title: "Manajemen Anggota — LinTree Admin",
@@ -11,8 +12,9 @@ export const metadata: Metadata = {
 export const revalidate = 0;
 
 export default async function AdminMembersPage() {
-  // Query all members sorted by id descending
-  const membersList = await db.select().from(members);
+  const membersList = isPreviewMode()
+    ? getPreviewData("members")
+    : await db.select().from(members);
 
   return <MembersManager initialMembers={membersList} />;
 }
